@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## RNAseq pipeline with STAR
 export sample="$1"
@@ -11,8 +11,8 @@ export data="$5"
 #mkdir fastqc
 #fastqc ./data/*.fastq.gz -o fastqc
 
-## STAR alignment
-module load STAR/2.5.3
+## STAR alignment (STAR is required)
+# module load STAR/2.5.3
 
 ### PE alingment
 mkdir -p $sample
@@ -25,10 +25,10 @@ STAR --runThreadN 12 --genomeDir $genome \
 --outSAMtype BAM SortedByCoordinate --outFileNamePrefix $sample
 ## in the output count table, column 1 is geneid, column 2 for unstranded, column 3 for 'yes' as htseqct, and column 4 for 'reverse' as htseqct
 
-## check strandedness
-module unload python
-module load Anaconda/4.2.0
-source activate my_root
+## check strandedness (RSeQC is required)
+# module unload python
+# module load Anaconda/4.2.0
+# source activate my_root
 infer_experiment.py -i ${sample}Aligned.sortedByCoord.out.bam -r $gtf_bed > ${sample}.strandness.txt
 cd ../..
 

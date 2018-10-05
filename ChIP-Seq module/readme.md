@@ -26,6 +26,8 @@ In the directory hg38/
  GRCh38.chr1.fa
  
  GRCh38.chr1.size
+ 
+ and indexed files
 
 4. Enter ChIPseq/:
 ```

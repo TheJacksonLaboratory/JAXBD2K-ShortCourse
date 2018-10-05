@@ -1,14 +1,4 @@
 #!/bin/bash
-
-#PBS -N fetchseq
-#PBS -m abe
-#PBS -M ada.zhan@jax.org
-#PBS -j oe
-#PBS -l nodes=1:ppn=10,mem=10GB,walltime=5:00:00
-
-cd $PBS_O_WORKDIR
-
-
 # Get the file for SRR1783944
 #module load sratoolkit/2.8.2
 #fastq-dump -I --split-files SRR1783944

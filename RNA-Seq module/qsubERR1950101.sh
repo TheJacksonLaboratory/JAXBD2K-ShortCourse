@@ -14,6 +14,10 @@ gtf_bed=./gencode.vM16.genes.bed
 
 mkdir RNAseq
 datadir=./RNAseq
+
+# obtain sequences
+./fethseq.sh
+
 $align ERR1950101 $genomedir $gtf $gtf_bed $datadir
 cd ERR1950101
 $chop ERR1950101 ERR1950101Aligned.sortedByCoord.out.bam chr2

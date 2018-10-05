@@ -2,6 +2,8 @@
 # ChIP-seq module #
 ###################
 
+# Prior class:
+# Index reference genome: 
 # ChIP-seq data
 In the directory ChIPseq/
  GM12878_control_chr1.fastq

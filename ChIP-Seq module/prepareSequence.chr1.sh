@@ -2,7 +2,7 @@
 
 # single ended sequencing, 'bam --> fastq --> bam' process 
 
-wget -i list.txt
+wget -i sequencelocation.txt
 
 # samtools, bedtools and bowtie are required
 # module load samtools

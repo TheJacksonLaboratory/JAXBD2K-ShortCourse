@@ -12,8 +12,6 @@
 1. Download and index reference genome: buildstar.sh
 2. Get the truncated seuqnce files: TruncateSequence.chr2.sh 
 
-*NOTE*: This process includes full genome sequence alignment. It may take a while to finish.
-
 ### Upload sequences to [Galaxy](https://usegalaxy.org)
 1. Register yourself
 2. Open up the tutorial document 'BD2K_RNAseqModule_JAX2018_online' and follow the steps

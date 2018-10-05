@@ -3,7 +3,7 @@ fastqc GM12878_control_chr1.fastq
 fastqc GM12878_CTCF_chr1.fastq
 
 # Prepare genome if not done yet
-bowtie-build hg38/GRCh38.chr1.fa hg38/GRCh38.chr1
+# bowtie-build hg38/GRCh38.chr1.fa hg38/GRCh38.chr1
 
 # Mapping
 bowtie -m 1 -S ./hg38/GRCh38.chr1 GM12878_control_chr1.fastq > GM12878_control_chr1.sam

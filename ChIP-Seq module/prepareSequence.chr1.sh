@@ -1,10 +1,6 @@
 #!/bin/bash
 
-# Summary:
-# for single ended sequencing, 'bam --> fastq --> bam' process does
-# not require randomization or readname sort.
-# samtools and bedtools were both tried out and yielded similar results.
-# Compared with original bam file, the re-aligned bam file removed soft-clipping matches
+# single ended sequencing, 'bam --> fastq --> bam' process 
 
 wget -i list.txt
 

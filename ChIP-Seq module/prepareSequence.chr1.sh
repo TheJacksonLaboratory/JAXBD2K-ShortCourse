@@ -13,7 +13,7 @@ wget -i sequencelocation.txt
 # module load bedtools/2.25.0
 # module load bowtie
 
-for i in ENCFF313NRK ENCFF834CAH ENCFF953EVD
+for i in ENCFF834CAH ENCFF953EVD
 do
         
 samtools sort ${i}.bam -o ${i}.sort
@@ -30,8 +30,8 @@ samtools sort ${i}.chr1.bam -o ${i}.chr1.sort.bam
 samtools index ${i}.chr1.sort.bam
 done
 
-mv ENCFF834CAH.chr1.fq GM12878_CTCF_chr1_rep1.fq
-mv ENCFF313NRK.chr1.fq GM12878_CTCF_chr1_rep2.fq
-mv ENCFF953EVD.chr1.fq GM12878_control_chr1.fq
+mv ENCFF834CAH.chr1.fq GM12878_CTCF_chr1.fastq
+mv ENCFF953EVD.chr1.fq GM12878_control_chr1.fastq
 
-#rm *.bam *.sort *.bai
+rm *.bam *.sort *.bai
+cd ..

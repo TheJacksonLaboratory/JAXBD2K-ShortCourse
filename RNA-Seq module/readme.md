@@ -10,7 +10,9 @@
 
 **Steps**
 1. Download and index reference genome: buildstar.sh
-2. Get the truncated seuqnce files: TruncateSequence.chr2.sh
+2. Get the truncated seuqnce files: TruncateSequence.chr2.sh 
+
+*NOTE*: This process includes full genome sequence alignment. It may take a while to finish.
 
 ### Upload sequences to [Galaxy](https://usegalaxy.org)
 1. Register yourself

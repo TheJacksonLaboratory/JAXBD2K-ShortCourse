@@ -14,4 +14,4 @@
 
 ### Upload sequences to [Galaxy](https://usegalaxy.org)
 1. Register yourself
-2. 
+2. Open up the tutorial document 'BD2K_RNAseqModule_JAX2018_online' and follow the steps

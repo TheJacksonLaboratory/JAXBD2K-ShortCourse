@@ -8,7 +8,7 @@
 export sample="$1"
 export bamfile="$2"
 export chr="$3"
-module load samtools
+# module load samtools
 #samtools view does not work with 'region' option unless you have indexed the BAM file
 
 samtools sort $bamfile -o ${sample}.sort.bam
@@ -18,7 +18,7 @@ samtools index ${sample}.sort.bam
 samtools view -@ 10 -bhS ${sample}.sort.bam $chr > ${sample}.${chr}.bam
 samtools index ${sample}.${chr}.bam
 # use bedtools (bedtools, two fastq for pair end)
-module load bedtools/2.25.0
+# module load bedtools/2.25.0
 samtools sort -n ${sample}.${chr}.bam -o ${sample}.${chr}.nsort.bam
 bedtools bamtofastq -i ${sample}.${chr}.nsort.bam \
 	-fq ${sample}.${chr}.1.fq \

@@ -21,3 +21,4 @@ cd ${i}
 $chop ${i} ${i}Aligned.sortedByCoord.out.bam chr2
 cd ..
 done
+

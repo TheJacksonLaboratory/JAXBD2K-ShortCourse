@@ -1,18 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-#PBS -N ERR1950101
-#PBS -m abe
-#PBS -M ada.zhan@jax.org
-#PBS -j oe
-#PBS -l nodes=1:ppn=12,mem=60GB,walltime=30:00:00
+align=./RNAseq_star.sh
+chop=./chop.sh
+genomedir=./mm10_star
 
-cd $PBS_O_WORKDIR
-align=/projects/zhany/BD2K_RNAseq/RNAseq_star.sh
-chop=/projects/zhany/BD2K_RNAseq/chop.sh
-genomedir=/projects/zhany/genome/mm10_star
-gtf=/projects/zhany/genome/mm10/gencode.vM16.annotation.gtf
-gtf_bed=/projects/zhany/genome/mm10/gencode.vM16.genes.bed 
-datadir=/projects/zhany/BD2K_RNAseq
+# mm10 gene annotation
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M16/gencode.vM16.annotation.gtf.gz
+gunzip gencode.vM16.annotation.gtf.gz |sed -e '1,5d' - \
+  | awk -F '[";\t]' '{if($3=="gene"){print $1,$4,$5,$22,$10,$7}}' OFS="\t" > gencode.vM16.genes.bed
+  
+gtf=./gencode.vM16.annotation.gtf.gz
+gtf_bed=./gencode.vM16.genes.bed 
+
+mkdir RNAseq
+datadir=./RNAseq
 $align ERR1950101 $genomedir $gtf $gtf_bed $datadir
 cd ERR1950101
 $chop ERR1950101 ERR1950101Aligned.sortedByCoord.out.bam chr2

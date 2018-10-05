@@ -1,4 +1,4 @@
-## ChIP-seq module 
+## ChIP-Seq module 
 
 ### Usage:
 1. Download all the files into one folder (pptx is not required)

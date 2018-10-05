@@ -1,12 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-#PBS -N build
-#PBS -m abe
-#PBS -M ada.zhan@jax.org
-#PBS -j oe
-#PBS -l nodes=1:ppn=12,mem=60GB,walltime=10:00:00
-
-cd $PBS_O_WORKDIR
 mkdir -p mm10_star
 cd mm10
 gunzip gencode.vM16.annotation.gtf.gz

@@ -2,6 +2,10 @@
 
 # single ended sequencing, 'bam --> fastq --> bam' process 
 
+mkdir ChIPseq
+mv sequencelocation.txt ChIPseq
+cd ChIPseq
+
 wget -i sequencelocation.txt
 
 # samtools, bedtools and bowtie are required

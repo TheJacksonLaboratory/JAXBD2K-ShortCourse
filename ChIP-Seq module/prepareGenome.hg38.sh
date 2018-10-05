@@ -2,6 +2,8 @@
 # The FASTA and chromosome size files were downloaded from UCSC Genome Browser.
 # The following codes were used to download and index the reference genome.
 
+mkdir hg38
+cd hg38
 # Download the genome sequence of Chromosome 1
 wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/chromosomes/chr1.fa.gz 
 # Unzip the file
@@ -16,3 +18,5 @@ rm hg38.chrom.sizes # only keep the chr1 size
 
 # Index the genome for the alignment
 bowtie-build GRCh38.chr1.fa GRCh38.chr1
+
+cd ..

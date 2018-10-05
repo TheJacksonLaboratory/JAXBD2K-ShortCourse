@@ -6,8 +6,8 @@ fastqc GM12878_CTCF_chr1.fastq
 # bowtie-build hg38/GRCh38.chr1.fa hg38/GRCh38.chr1
 
 # Mapping
-bowtie -m 1 -S ./hg38/GRCh38.chr1 GM12878_control_chr1.fastq > GM12878_control_chr1.sam
-bowtie -m 1 -S ./hg38/GRCh38.chr1 GM12878_CTCF_chr1.fastq > GM12878_CTCF_chr1.sam
+bowtie -m 1 -S ../hg38/GRCh38.chr1 GM12878_control_chr1.fastq > GM12878_control_chr1.sam
+bowtie -m 1 -S ../hg38/GRCh38.chr1 GM12878_CTCF_chr1.fastq > GM12878_CTCF_chr1.sam
 
 # Further processing
 ## compress to BAM
@@ -28,7 +28,7 @@ Rscript GM12878_CTCF_chr1_model.r
 
 # Motif analysis
 ## extend summits 100bp on both directions
-bedtools slop -i GM12878_CTCF_chr1_summits.bed -g hg38/GRCh38.chr1.size -b 100 > GM12878_CTCF_chr1_summits_ext.bed
+bedtools slop -i GM12878_CTCF_chr1_summits.bed -g ../hg38/GRCh38.chr1.size -b 100 > GM12878_CTCF_chr1_summits_ext.bed
 ## get sequence file (i.e. fasta)
-bedtools getfasta -fi hg38/GRCh38.chr1.fa -bed  GM12878_CTCF_chr1_summits_ext.bed -fo GM12878_CTCF_chr1_summits_ext.fa
+bedtools getfasta -fi ../hg38/GRCh38.chr1.fa -bed  GM12878_CTCF_chr1_summits_ext.bed -fo GM12878_CTCF_chr1_summits_ext.fa
 ## The .fa file will be uploaded to MEME online server for motif discovery (http://meme-suite.org/tools/meme-chip)

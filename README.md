@@ -7,4 +7,4 @@ The training program included seminars, extensive hands-on data analyses, evenin
 
 In the past three years, our short-course has been proven to be a desirable program. We have developed adaptable bioinformatics modules to be implemented appropriately into an undergraduate curriculum. To benefit broader audience, we decide to release our lastest couse materials here. We hope that our sharing with the community will inform colleagues, encourage collaborations and discussions, and most beneficially inspire new approaches to enhance bioinformatics education for our field. 
 
-**NOTE**: The truncated sequence data will be provided upon request. Included in ChIP-Seq and RNA-Seq modules have scripts for truncating single-end and pair-end sequencing data. 
+**NOTE**: The truncated sequence data can be accessed at [ftp://ftp.jax.org/encode](ftp://ftp.jax.org/encode). Included in ChIP-Seq and RNA-Seq modules have scripts for truncating single-end and pair-end sequencing data. 

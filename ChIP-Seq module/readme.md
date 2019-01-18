@@ -40,7 +40,7 @@ To fit the whole analysis into manageable time frame, the sequence files were tr
 ---------
 In addition, we also provide scripts (/scripts) if you want to produce truncated sequences by yourself.
 **Steps**
-1. Download all the files into one folder (pptx is not required for data preparation)
+1. Download all the files into one folder (pptx or pdf is not required for data preparation)
 2. Run prepareGenome.hg38.sh to download and index reference genome
 ```
 ./prepareGenome.hg38.sh
@@ -81,3 +81,5 @@ cd ChIPseq
 ```
 ./workflow.sh
 ```
+
+*Lecture slides and hand-on practice are provided in 'BD2K2018_ChIPseq'*

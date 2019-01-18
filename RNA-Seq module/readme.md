@@ -10,7 +10,7 @@ The RNA-seq data is from the research by [Mitchell RK *et al* 2017](http://www.j
 
 ### Obtain the sequence data
 
-All the compressed fastq files (.fq.gz or .fastq.gz) can be accessed at ftp://ftp.jax.org/encode/RNAseq
+All the compressed fastq files (.fq.gz or .fastq.gz) can be accessed at **ftp://ftp.jax.org/encode/RNAseq** (copy and paste this address to your browser.)
 
 There are four pair-end experiments on two conditions:
 (read 1: .1.fq.gz or .1.fastq.gz; read 2: .2.fq.gz or .2.fastq.gz)
@@ -20,7 +20,7 @@ There are four pair-end experiments on two conditions:
 To fit the whole analysis into manageable time frame, the sequence files were truncated to chromosome 2 (chr2) that hosts Pax6 gene. 
 
 --------
-In addition, we also provide scripts if you want to produce truncated sequences by yourself. 
+In addition, we also provide scripts (/scripts) if you want to produce truncated sequences by yourself. 
 
 **Dependencies** 
 

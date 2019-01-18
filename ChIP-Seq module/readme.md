@@ -10,8 +10,11 @@ In ChIP-Seq module, one will perform ChIP-seq pipeline in terminal and do the fo
 ### Data background
 
 Target: CTCF
+
 Biosample: Homo Sapiens GM12878 (A lymphoblastoid cell line)
-Source: [Encode](encodeproject.org)
+
+Source: [Encode](https://www.encodeproject.org)
+
 Accession id: ENCFF000ARP (sample) and ENCFF000ARK (control)
 
 ### Dependent Tools 

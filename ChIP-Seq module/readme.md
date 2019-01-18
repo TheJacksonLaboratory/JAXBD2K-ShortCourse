@@ -5,7 +5,7 @@
 In ChIP-Seq module, one will perform ChIP-seq pipeline in terminal and do the following tasks.
 - Sequence mapping
 - Peak calling
-- Motif analysis
+- Motif analysis ([MEME](http://meme-suite.org/tools/meme-chip) on-line server) 
 
 ### Data background
 

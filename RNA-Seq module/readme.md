@@ -43,3 +43,5 @@ Once you have all the sequence data, you are ready to proceed with RNA-seq analy
 In this module, you need to
 1. Register an account on Galaxy if you haven't yet
 2. Open up the tutorial document 'BD2K_RNAseqModule_JAX2018_online' (.docx or .pdf) and follow the steps
+
+*Lecture slides are also supplied ('BD2K_RNAseqModule2018')*

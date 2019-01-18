@@ -1,7 +1,21 @@
 ## ChIP-Seq module 
 
-### Usage:
-1. Download all the files into one folder (pptx is not required)
+### Objective
+
+In ChIP-Seq module, one will perform ChIP-seq pipeline in terminal and do the following tasks.
+- Sequence mapping
+- Peak calling
+- Motif analysis
+
+### Data background
+
+Target: CTCF
+Biosample: Homo Sapiens GM12878 (A lymphoblastoid cell line)
+Source: [Encode](encodeproject.org)
+Accession id: ENCFF000ARP (sample) and ENCFF000ARK (control)
+
+### Usage
+1. Download all the files into one folder (pptx is not required for data preparation)
 2. Run prepareGenome.hg38.sh to download and index reference genome
 ```
 ./prepareGenome.hg38.sh

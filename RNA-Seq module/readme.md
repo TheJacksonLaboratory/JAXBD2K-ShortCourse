@@ -4,11 +4,11 @@
 
 In this module, we'll perform basic RNA-Seq workflow and do differential expression analysis on Galaxy.
 
-### Dataset background
+### Data background
 
 The RNA-seq data is from the research by [Mitchell RK *et al* 2017](http://www.jbc.org/content/292/21/8892). The authors investigated significant transcriptional differences underlying the defective glucose-stimulated insulin secretion of Pax6 knockout mice in comparison to floxed littermate controls. In human, heterozygous mutations in the gene PAX6 lead to impaired glucose tolerance. Embryonic deletion of the Pax6 gene in mice causes loss of most pancreatic islet cell types. In this study, the authors revealed that in adult mice the inactivating Pax6 genes leads to reduced expression in many key beta cell genes but increase in some other genes that contribute to the reduction total islet insulin content.
 
-### Obtain the seuqnce data
+### Obtain the sequence data
 
 All the compressed fastq files (.fq.gz or .fastq.gz) can be accessed at ftp://ftp.jax.org/encode/RNAseq
 

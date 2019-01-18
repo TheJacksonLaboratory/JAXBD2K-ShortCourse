@@ -7,4 +7,7 @@ The training program included seminars, extensive hands-on data analyses, evenin
 
 In the past three years, our short-course has been proven to be a desirable program. We have developed adaptable bioinformatics modules to be implemented appropriately into an undergraduate curriculum. To benefit broader audience, we decide to release our lastest couse materials here. We hope that our sharing with the community will inform colleagues, encourage collaborations and discussions, and most beneficially inspire new approaches to enhance bioinformatics education for our field. 
 
-**NOTE**: The truncated sequence data can be accessed at **[ftp://ftp.jax.org/encode](ftp://ftp.jax.org/encode)**. 
+**NOTE**: 
+
+- All the ready-to-use sequence datasets can be accessed at **[ftp://ftp.jax.org/encode](ftp://ftp.jax.org/encode)**. 
+- If you have any problem downloading/viewing/using the files from GitHub (https://github.com/TheJacksonLaboratory/JAXBD2K-ShortCourse/) or FTP (ftp://ftp.jax.org/encode), please report issues on our github site or contact us at ada.zhan@jax.org. 

@@ -45,3 +45,7 @@ In this module, you need to
 2. Open up the tutorial document 'BD2K_RNAseqModule_JAX2018_online' (.docx or .pdf) and follow the steps
 
 *Lecture slides are also supplied ('BD2K_RNAseqModule2018')*
+
+### Bonus module material
+
+'miniMouse' module (/Mini_RNAseq_Module) was created by Prof. [Andrea R. Tilden](https://www.colby.edu/directory/profile/artilden/), our BD2K course alumna, from Colby College. We appreciate her generosity to allow us to share her files here. 

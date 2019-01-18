@@ -17,7 +17,7 @@ There are four pair-end experiments on two conditions:
 - Wild type: ERR1950095 and ERR1950098 
 - Pax6 gene knock out: ERR1950099 and ERR1950101
 
-To fit the whole analysis into manageable time frame, the seqence files were truncated to chromosome 2 (chr2) that hosts Pax6 gene. 
+To fit the whole analysis into manageable time frame, the sequence files were truncated to chromosome 2 (chr2) that hosts Pax6 gene. 
 
 --------
 In addition, we also provide scripts if you want to produce truncated sequences by yourself. 

@@ -19,23 +19,6 @@ There are four pair-end experiments on two conditions:
 
 To fit the whole analysis into manageable time frame, the sequence files were truncated to chromosome 2 (chr2) that hosts Pax6 gene. 
 
---------
-In addition, we also provide scripts (/scripts) if you want to produce truncated sequences by yourself. 
-
-**Dependencies** 
-
-[STAR](https://github.com/alexdobin/STAR);
-[RseQC](http://rseqc.sourceforge.net);
-[samtools](http://www.htslib.org);
-[bedtools](https://bedtools.readthedocs.io/en/latest/)
-
-**Steps**
-1. Download and install all the above mentioned software
-2. Download all scripts (.sh) to one location on your computer
-3. Run ./buildstar.sh to download and index reference genome
-4. Get the truncated seuqnce files by running ./TruncateSequence.chr2.sh 
----------
-
 ### Practice on [Galaxy](https://usegalaxy.org)
 
 Once you have all the sequence data, you are ready to proceed with RNA-seq analysis. Galaxy has all the tools and technical support. [UseGalaxy](https://usegalaxy.org) is open to everyone and allow you to work on datasets smaller than 250GB. Galaxy also provides other [options](https://galaxyproject.org/choices/) to meet diverse needs. 

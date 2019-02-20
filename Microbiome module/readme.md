@@ -41,4 +41,4 @@ By the end of this exercise, participants should be able to answer the following
 
 ### Practice
 
-Users are encouraged to familarize themselves with the background knowledge covered in the lecture slides prior to the hands-on. Software packages need to be installed properly. When you are ready, please download and save files to your local directory from **ftp://ftp.jax.org/encode/microbiome_module**. Open up the 'BD2K_Rnotebook.Rmd' in Rstudio and follow the instructions in the documents. 
+Users are encouraged to familarize themselves with the background knowledge covered in the lecture slides prior to the hands-on. Software packages need to be installed properly. When you are ready, please download and save files to your local directory from **ftp://ftp.jax.org/encode/microbiome_module**. Open up the 'BD2K_Rnotebook.Rmd' in Rstudio and follow the instructions in the document. 

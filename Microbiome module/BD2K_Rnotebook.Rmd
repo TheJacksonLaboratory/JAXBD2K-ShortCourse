@@ -1,0 +1,1014 @@
+---
+title: "Microbiome Training Module - BD2K 2018"
+output:
+  word_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+***
+  
+### Objectives and outcomes
+
+By design, BD2K empowers scientists to use tools from data science for the purpose of advancing scientific fields that, historically, have not worked with “big data,” including biology. Therefore, this module aims to advance participants skills not only in the area of computation and data science, but also in our current biological understanding of the microbiome and metagenomics.
+
+*Computation and data science goals*
+
+* File/Directory manipulation from the command line
+* Writing and executing “for loops”
+* Analyzing file content with basic bash commands
+* Aligning paired end 16S sequencing reads (FLASh)
+* Clustering unique 16S sequences (usearch)
+* Assigning taxonomy to sequences (RDP classifier)
+* Processing and visualizing 16S data in R (phyloseq)
+* Figure generation in R (ggplot2)
+
+*Knowledge and concept goals*
+
+* Why do we need to data science approaches to analyze metagenomics data?
+* What is the advantage of paired end reads?
+* What is a chimera and why are they important?
+* What is the structure of a fastQ file?
+* What quality control steps are recommended for metagenomics data?
+* How do we avoid contamination from human sequences?
+* What formats are most useful for visualizing microbiome data?
+* Why are some 16S sequences unclassified?
+* Does it matter if you have different numbers of reads from each sample?
+
+***
+  
+### Pre-requisite knowledge
+
+*What do students need to know before launching this analysis?*
+
+Students should ideally have attending the “Introduction to microbial sequencing” lecture, which covers the following information:
+
+* How does metagenomics differ from genomics?
+* Why do we need to data science approaches to analyze metagenomics data?
+* What is the advantage of paired end reads?
+* What is the structure of a fastQ file?
+* What quality control steps are recommended for metagenomcics data?
+* How do we avoid contamination from human sequences?
+* Why do we sequence the 16S gene?
+* How can we use 16S sequencing data to generate a relative abundance table?
+* What is an operational taxonomic unit (OTU)?
+* How can diversity measures illuminate differences in microbiome samples?
+* What are the limitations of 16S sequencing? 
+
+*What would be nice for students to have familiarity with?*
+
+* Confidence working in the statistical language “R”
+* Confidence working with LINUX & shell scripting
+
+***
+
+### Pre-requisite software packages
+
+*Students should have access to a personal or virtual machine with the following programs installed:*
+
+* FLASh v 1.2.11: https://ccb.jhu.edu/software/FLASH/
+* FASTX-Toolkit v 0.0.14: http://hannonlab.cshl.edu/fastx_toolkit/download.html
+* usearch v 10.0.240: https://www.drive5.com/usearch/
+* UPARSE python scripts: https://drive5.com/python/
+* RDP Classifier tool: https://rdp.cme.msu.edu/tutorials/classifier/classifer_cover_page.html
+* Rstudio v1.1 (or later): https://www.rstudio.com/products/rstudio/download/
+* R package phyloseq: https://github.com/joey711/phyloseq
+* R package metaseq:http://bioconductor.org/packages/release/bioc/html/metaSeq.html
+* R v3.5
+* Python v2.7
+* Java v1.7
+
+### Training module overview
+
+*Training module background and goals*
+
+A major aim of microbiome research is to identify diseases that are associated with a change in the human microbial community at a body site of interest (e.g. skin, gut, etc). If the microbiomes of diseased and healthy individuals are different, then follow up studies can determine if microbial changes are causative or correlative with disease and evaluate potential therapeutics aimed at the microbiota.
+
+Here, we are studying two groups of individuals – a control group and a disease group – and we would like to understand if these groups have different microbial communities. Skin swabs were taken for all patients and were sequenced by paired end 16S sequencing. 
+
+By the end of this exercise, participants should be able to answer the following questions:
+
+* What species are present on healthy skin?
+* Do diseased and healthy individuals support different skin microbial communities?
+* Are microbial communities more diverse for healthy or diseased patients?
+
+
+
+
+
+
+***
+
+### Key steps of the exercise
+
+**Part 1**
+
+A.	Review file structure navigation with the command line
+B.	Review basic BASH 
+C.	Writing for loops in BASH
+
+**Part 2**
+
+D.	Explore the raw sequencing data files
+E.	Combine paired-end reads into contiguous sequences in fasta format
+F.	Cluster unique sequences into operational taxonomic units
+G.	Create a table of OTU abundance
+H.	Assign taxonomy to OTU sequences
+
+**Part 3**
+
+I.	Review file import and plotting in R
+J.	Account for sequencing depth variation
+K.	Plot relative abundance for healthy v disease groups
+L.	Plot alpha diversity for healthy v disease groups
+M.	Plot beta diversity for healthy v disease groups
+
+
+
+
+
+
+
+
+
+***
+
+# Microbiome Training Module 
+
+***
+
+
+
+
+
+
+
+
+***
+
+## Part 1: BASH Review 
+
+### *A. Review file structure navigation with the command line*
+
+We are all used to the graphical user interfaces that allow us to manipulate files by double clicking to open them and dragging them from folder to folder when its necessary to move or copy them. This is a highly effective way to interact with one or two files at a time.
+
+However, for this module, we will be analyzing paired end read data for 7 healthy patient samples and 8 diseased patient samples, meaning that we will be handling 2 reads per sample, or a total of 30 reads. Moving, renaming and accessing 30 files at a time is challenging with a traditional graphical user interface, but it is a task very well suited to work with the command line. Earlier this week, we practiced using the command line. Today, we’ll be using the command line a lot, and especially to navigate which files are where. 
+
+As shown in Figure 1 below, files are contained inside directories (aka folders), which may themselves be nested within each other. We are used to opening directories in series to find a file we are looking for. On the command line, we can similarly navigate the tree structure using the “cd” command and “/” to separate directory and file names.
+
+**Figure 1: File system structure looks like an upside down tree with branches** 
+![](./training_exercise/scripts/Figure_1.png)
+
+1.	The text that precedes the $ in your terminal indicates the directory that you are currently in. You will start in your current directory (represented by the tilde .)
+
+2.	Navigate to a directory named “directory_practice” for practice moving up and down the tree structure. The command “pwd” will print the directory that you are currently in, which is very useful if you get lost! 
+
+
+```{bash}
+# start in home directory and print the working directory to the screen
+cd .
+pwd
+
+#navigate to directory practice
+cd directory_practice
+```
+
+3.	To visualize the entire “tree” structure at once, use the tree command. *Which subdirectories(s) have no files inside? Which subdirectory has only one text file inside?*
+
+*Note*: tree command may not work on Mac OS X. You can use [Homebrew](https://brew.sh) to install tree command line tool with the command: brew install tree
+
+```{bash}
+# visualize the directory and sub-directories as a tree
+tree
+```
+
+4.	We can navigate directory to a directory by typing in the exact address – this is akin to telling someone that JAX is at 10 Discovery Drive, Farmington CT, 06032, USA. Or you can navigate by giving relative directions, using a series of “cd” operations to move down the tree structure. Note that “.” Represents your current directory and “..” represents a parent directory, which can be useful for moving up the tree structure as in “cd ..” *Navigate directory to directory S3. What directory do you end up in if you then move up the tree structure by one directory?* 
+
+```{bash}
+# change directory to S3 using its exact address
+cd B/S3
+
+cd ..
+```
+
+5.	We can use the “ls” command to list the contents of a directory, either additional directories or files.  Flags can be appended to Linux commands to reveal more information. You can find out more information about a Linux command and the allowable flags with the “-- help” flag. *Navigate to the directory S4. What are the names of the files inside? What happens if you add the -a flag to the ls command?*
+
+```{bash}
+# change directory to S4
+cd S4
+
+# list the contents of the directory
+ls
+```
+
+6.	We can add to the tree structure by making new directories. *Make a new directory within “directory_practice/A/S1” called “newdir” using the “mkdir” command. Visualize the new tree structure for “directory_practice”.*
+
+```{bash}
+# change directory to S1
+cd ../../A/S1
+
+# list the current contents of S1
+ls
+
+# make a new directory with the name "newdir"
+mkdir newdir
+
+# now list the current contents of S1. See "newdir is now there.
+ls
+
+# go back to the upper level directory directory_practice
+cd ../..
+
+# visualize the directory and sub-directories as a tree
+tree
+```
+
+***
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+### *B. Review key BASH commands*
+
+***
+
+Bash is a powerful tool for not only storing and navigating files and directories, but also peering inside of them and manipulating them. We will be using several LINUX commands to handle 16S sequencing data. Here, let’s practice using them with non-sequencing examples and then we can apply them to 16S later in the module. 
+
+*First, navigate to directory S4 within the B directory within the “directory_practice” directory.*
+
+1.	**head**. Head is a convenient tool for getting a quick glimpse at the contents of a file without having to visualize the entire document. Head displays the first 10 lines of a file to the screen. There are additional flags for customizing the output of head. For example, “head -n” will print the first “n” number of lines. See “head -- help” for details. *What happens when you issue the command “head JAX.txt”? How about “head -3 JAX.txt”?*
+
+```{bash}
+# print your current working directory
+pwd
+
+# navigate to directory S4
+cd ./B/S4
+
+# look at the first three lines of the file JAX.txt
+head -3 JAX.txt
+
+```
+
+***
+
+2.	**cat**. Cat is an extremely useful command that will concatenate files or standard input to standard output. We will be using the cat command to pool sequences together from different samples. Use the “>” character to define the standard output from the cat command. *Look at microbiome.txt. Combine microbiome.txt with JAX.txt and save the output as a new file microbiomeJAX.txt. Use head to look at the first 8 lines of the new file.*
+
+```{bash}
+# look at file microbiome.txt. NOTE that head displays the first 10 lines by default unless otherwise specified
+head microbiome.txt
+
+# concatenate two text files using "cat" and then output the result using ">" to a new file, called microbiomeKJAX.txt
+cat microbiome.txt JAX.txt > microbiomeJAX.txt
+
+# look at the first 8 lines of the new file. See that they were concatenated.
+head -8 microbiomeJAX.txt
+
+```
+
+***
+
+3.	**grep**. Grep is a LINUX command for finding instances of patterns within a file. It is particularly useful in combination with other commands, but first explore grep on its own. *Look again at the microbiome.txt file. Use grep to return any line that has the letter “f” in it. Which lines have the letter “s”?*
+
+```{bash}
+# look at the file microbiome.txt
+head microbiome.txt
+
+# use "grep" to find lines with the character "f" in the file microbiome.txt
+grep "f" microbiome.txt
+
+# use "grep" to find lines with the character "f" in the file microbiome.txt
+grep "s" microbiome.txt
+
+```
+
+***
+
+4.	**wc**. Wc is a counting tool typically used in combination with a flag. Depending on the flag, wc can be used to count the number of characters (-m), line (-l), words (-w), etc in a file. See “wc – help” for details. *How many lines are in microbiome.txt? How many words?*
+
+```{bash}
+# use "wc" with the "-l" flag to count the number of lines in the file microbiome.txt
+wc -l microbiome.txt
+
+# use "wc" with the "-w" flag to count the number of words in the file microbiome.txt
+wc -w microbiome.txt
+
+```
+
+***
+
+5.	**|**The “|” character is called a “pipe,” and it allows you to send the output from one command as the input to another command, as if the two commands were connected by a pipe. With the “|” command, we can combine simple LINUX commands to achieve complex outcomes. *Use grep in combination with wc to count the number of lines in microbiome.txt that contain the “>” character. Then output any line that contains “fun” in JAX.txt or microbiome.txt to a new file, called fun.txt. Look at the contents of fun.txt. Did your code work?*
+
+```{bash}
+# first use "grep" to identify lines with the ">" character and then pass the result with a pipe "|" to wc -l" to count the number of lines
+grep ">" microbiome.txt | wc -l
+
+# first use "cat" to join two files and then pass the result with a pipe "|" to "grep" and look for the word "fun" and send the result to a file called "fun.txt"
+cat microbiome.txt JAX.txt | grep "fun" > fun.txt
+
+# look at the file "fun.txt" See how the code above worked.
+head fun.txt
+
+```
+
+***
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+### *C. "Writing For loops in Bash"*
+
+In any computing language, “for loops” are an essential approach for repeating a section of code over and over again while a certain condition (for ...) is met. Once the condition has been satisfied, the for loop concludes. This is particularly useful to us because we have 30 pair-end read files and 15 different patient samples, each of which contains many many individual sequencing reads, and we want to treat and process all of these samples and reads equally. For our purposes, we will use for loops to apply some operation again and again until all patient samples have been analyzed.
+
+```{bash}
+for item in list_of_items
+  do operation(s) to be executed on each item
+done
+  
+```
+
+This for loop will chug through a list of items one by item and apply the same set of operation(s) on each and every item. Note that the “$” character is used to refer to a previously defined variable that can take on different values as the for loop progresses. 
+
+let’s write a for loop to write the filename and count the number of lines in every text file in directory S4. Note that "$*$" is a wildtype character, so "$*$.txt” means any file in the directory that ends with .txt”. We can write this cleanly on one line by separating statements with semi-colons.
+
+```{bash}
+# show all .txt files in the current working directory (microbiome_module/directory_practice/B/S4)
+ls *.txt
+
+# we are going to iterate over all txt files in the working directory
+# for each file the variable file takes on, count the number of lines
+# end the for loop
+
+for file in *.txt
+  do wc -l $file
+done
+
+```
+
+
+
+
+
+
+
+
+
+
+***
+
+## Part 2: Processing 16S Sequencing reads
+
+***
+
+
+
+
+
+
+
+
+
+
+### *D.	Creating symbolic links to the raw data*
+
+Before we begin our 16S analysis, it is good practice to think twice about working directly with the raw sequencing data. What if you delete it or manipulate it in a problematic way? It is good practice to do your analysis in a fresh directory. Instead of copying over all the files to our new directory and saving the raw files as backup, we can use symbolic links. Symbolic links are special file types that do not contain data themselves, but point to the raw sequencing data, much like an “alias” or “shortcut” does on a PC. Once a symbolic link is made, you can perform all the standard LINUX operations on it without working about the raw data.
+
+We will use the “ln -s” command to make symbolic links. The ln -s command has the following format: 
+
+```{bash}
+ln -s raw_file symbolic_link_name
+```
+
+*First, navigate to the directory “training_exercise.” Make a new directory for your analysis called “16S_analysis.” Then, in the new 16S_analysis directory, using the ln -s command, create a symbolic link to “A_control.R1_sub.fastq.” Use the “ls” command to look at your 16S_analysis directory – did you make a link?*
+
+We can use the same name for the symbolic link (A_control.R1_sub.fastq) as the original file so everything lines up.
+
+```{bash}
+# navigate to the training exercise directory
+cd ../../../training_exercise
+
+# make a new directory called "16S_analysis" and move into it
+mkdir 16S_analysis
+cd 16S_analysis
+
+# make a symbolic link between the original A_control.R1_sub.fastq file and a new file in the 16S_analysis direcotry with the nsame name
+ln -s ./fastqs/A_control.R1_sub.fastq A_control.R1_sub.fastq
+
+# use ls to look at the contents of the 16S_analysis directory and check that the link was made
+ls
+```
+
+Now, using a “for loop,” we'll make symbolic links to all fastq files in the “fastqs” directory. When we made a symbolic link for A_control, we specified that the name of the linked file should have the same name as the original filename (eg "A_control.R1_sub.fastq"). *BUT, for our "for loop", we'll want the output filename to change depending on the input filename - it won't always be A_control.R1_sub.fastq* We can use the function **basename** to extract  the original filenames so we can then assign those as the output names.
+
+NOTE: we will use the variable "FASTQ" for the original filenames and "LINKNAME" for the symbolic link names. *Let's do an example where we use echo to print the original FASTQ filenames and our assigned LINKNAMES. Then run the actual "for loop" to generate symbolic links.*
+
+```{bash}
+
+# for each raw FASTQ file in the directory
+for FASTQ in ./fastqs/A*.fastq
+do 
+LINKNAME="$(basename ${FASTQ})"
+echo $FASTQ
+echo $LINKNAME
+done
+
+#now make symbolic links
+
+```{bash}
+
+# for each raw FASTQ file in the directory
+for FASTQ in ./fastqs/*.fastq
+do 
+LINKNAME="$(basename ${FASTQ})"
+ln -s $FASTQ $LINKNAME
+done
+
+# list what files you've created
+ls
+
+```
+
+***
+
+
+
+
+
+
+
+
+
+
+
+
+
+### *E. Explore the sequencing data files*
+
+***
+
+Now that we’ve re-familiarized ourselves with LINUX operations, let’s jump into 16S sequence analysis. Raw sequencing files are stored in the folder fastqs within the directory “training_exercise.” *Navigate to the 16S_analysis directory. What are the files inside? How many control and disease subjects have we sampled?*
+
+```{bash}
+
+# navigate to the 16S_analysis directory and show all the files
+cd ./16S_analysis
+ls
+
+#
+
+```
+
+
+For each patient, we have 1 fastq file, each of which contains many sequencing reads. Recall that a fastq file has a specific architecture that gives us a lot of information – 4 lines per sequencing read give us the DNA sequence and some quality information indicating how confident we are about the assignment of each nucleotide base.
+
+*Line 1: begins with an “@” character and contains a unique sequence identifier
+*Line 2: the raw sequence letters
+*Line 3: begins with a “+” character
+*Line 4: quality score corresponding to each sequence letter in Line 2.
+
+*Use head to look at the first 2 fastq reads for patient A, R1.*
+
+```{bash}
+# look at the first 2 fastq reads for patient A, R1
+head -8 A_control.R1_sub.fastq
+
+```
+
+How many reads are there per patient sample? *Use wc to find the number of sequencing reads in the file “A_control.R1_sub.fastq.” Hint: each read occupies 4 lines.*
+
+```{bash}
+# count the number of lines in the file A_control.R1_sub.fastq
+wc -l A_control.R1_sub.fastq
+```
+
+If we divide the result by 4 we can see that there are 4800/4 = 1200 reads in the file
+
+***
+
+
+
+
+
+
+
+
+
+
+
+
+
+### *F. Combining paired end reads into contiguous sequences in fasta format*
+
+***
+
+As we discussed in the “Introduction to sequencing microbiota” lecture, there are advantages to sequencing a single 16S gene amplicon with more than 1 read. Illumina paired-end sequencing uses 2 reads in opposing directions to cover (i) more of the target sequence (in our case, the 16S variable region of interest) with (ii) higher quality. *What do you think “R1” and “R2” stand for in our fastq filenames?*
+
+For every 16S sequence we have a matching read 1 and read 2 stored in separate fastq files. At this point, we’d like to align the two paired reads and combine them into one contiguous, high quality fastq file. We will be using a program called **“FLASh.”**
+
+**Figure 2: Paired end reads increase the length and quality of the assembled read** 
+![](./training_exercise/scripts/Figure_2.png)
+
+***
+
+We can run **FLASh**. The usage of flash is as follows:
+
+```{bash}
+# use flash to align read_1 and read_2 and output an alignment file output_name
+path/to/flash [read_1.fastq] [read_2.fastq] -o [output_name]
+
+```
+
+*First, run flash for just 1 sample: A_control. Use “ls” to look in your 16S_analysis directory again. What new files have been generated? NOTE: You can tell “ls” to just look only at files that begin with “A_control” files, since at this point, those are the only files we’ve been working with.*
+
+*NOTE*: Currently, in the bash terminal (within RStudio), you are at 16S_analysis directory; in the R Console, you are at microbiome_module directory. 
+
+```{bash}
+
+# use flash to align read_1 and read_2 and output an alignment file output_name 
+# NOTE: Please double check where you installed 'flash'
+~/FLASH-1.2.11-Linux-x86_64/flash A_control.R1_sub.fastq A_control.R2_sub.fastq -o A_control
+
+# use ls to look only at files starting with A_control. What new files have been created?
+ls A_control*
+
+```
+
+A_control.extendedFrags.fastq contains your paired read 1 (aka Mate 1) and read 2 (aka Mate 2). Has every single read 1 been paired with a read 2? Recall that A_control.R1_sub.fastq had 4800 lines, corresponding to 1200 reads. 
+
+*Check to see how many reads were paired. What are some reasons why reads might not be paired? Hint: look at the flash output.*
+
+```{bash}
+wc -l A_control.extendedFrags.fastq
+```
+
+3672/4 = 918 fastq reads have been paired (918/1200 = 76.5%)
+
+***
+
+At this point, we could proceed and run flash individually for all 15 patient samples. OR, we could take advantage of our “for loop” experience to write a script that will iteratively progress through all 15 samples, running flash and assigning the patient sample name to the output. 
+
+***
+
+*For a challenge, try to write a for loop to process all 15 samples.*
+
+When we ran flash above, we maually specified both input file names (R1 and R2) and an ouput filename. BUT, if we run a "for loop" and automatically iterate through all FASTQ files for all 15 samples, we'll need to tell flash what filenames to use. Notice how filenames have a prefix (descriptor, and what comes before the "." filetype) and a suffix (the filetype, e.g. ".fastq"). What's helpful is that our R1 and R2 files have the same prefix and we want to use that prefix as our output name (e.g. "A_control"). 
+
+Using the function **basename** again, our approach will be as follows:
+*identify an R1 fastq filename
+*remove the ".R1_sub.fastq" suffix to generate the prefix only
+*generate the corresponding R2 fastq filename by appending the ".R2_sub.fastq" suffix instead
+*use the filename prefix as the output file prefix (no suffix)
+
+```{bash}
+# for all R1 fastq files with variable name FASTQ1
+# cut off the .R1_sub.fastq suffix and call the prefix the variable SAMPLENAME
+# define the R2 fastq filename as FASTQ, or the SAMPLENAME plus the R2_sub.fastq suffix
+# output the names
+
+for FASTQ1 in B*.R1_sub.fastq
+do 
+echo $FASTQ1
+SAMPLENAME="$(basename ${FASTQ1%.R1_sub.fastq})"
+echo $SAMPLENAME
+FASTQ2="${SAMPLENAME}.R2_sub.fastq";
+echo $FASTQ2
+done
+
+#does this work for all 15 samples?
+
+for FASTQ1 in *.R1_sub.fastq
+do 
+echo $FASTQ1
+SAMPLENAME="$(basename ${FASTQ1%.R1_sub.fastq})"
+echo $SAMPLENAME
+FASTQ2="${SAMPLENAME}.R2_sub.fastq";
+echo $FASTQ2
+done
+
+```
+
+*Now edit the loop to run flash with the paired read 1 and read 2 files.*
+
+```{bash}
+
+# for all R1 fastq files with variable name FASTQ1
+# cut off the .R1_sub.fastq suffix and call the prefix the variable SAMPLENAME
+# define the R2 fastq filename as FASTQ, or the SAMPLENAME plus the R2_sub.fastq suffix
+# run flash on FASTQ R1 and R2 and output the SAMPLENAME file
+
+for FASTQ1 in *.R1_sub.fastq
+do 
+SAMPLENAME="$(basename ${FASTQ1%.R1_sub.fastq})"
+FASTQ2="${SAMPLENAME}.R2_sub.fastq"
+~/FLASH-1.2.11-Linux-x86_64/flash $FASTQ1 $FASTQ2 -o $SAMPLENAME
+done
+
+```
+
+*Use ls to find all the .extendedFrags.fastq files. Do you have one file for each patient sample?*
+
+```{bash}
+# Use the wildcard with suffix extendedFrags.fastq to see matches for just that filetype
+ls *.extendedFrags.fastq
+```
+
+***
+
+Now that we’ve successfully combined our reads, we no longer need quality score information at every base. Let’s convert our .extendedFrags.fastq files to fasta files. Recall that fasta files are just 2 lines:
+
+* Line 1: begins with a “>” character and contains a unique sequence identifier
+* Line 2: the raw sequence letters
+
+We can use a handy program called “fastq_to_fasta” to accomplish this goal. We run fastq_to_fasta in bash with the following format: 
+
+```{bash}
+fastq_to_fasta -i [fastq input filename] -o [fasta output filename]
+```
+
+*Convert the A_control patient combined read fastq file to a fasta file.* We can now see the A_control.fasta appear in our directory and the contents are indeed in fasta format.
+
+```{bash}
+
+# Please double check where you installed fastq_to_fasta
+# run the fastq_to_fasta program with -i [input filename] and -o [output filename]
+/usr/local/bin/fastq_to_fasta -i A_control.extendedFrags.fastq -o A_control.fasta
+
+# just look at what new files you've made for the A_control patient using the wildcard
+ls A_control*
+```
+
+*As we’ve done several times now, use a “for loop” to apply this fastq to fasta conversion to all the patient files. Again, use the basename command again along with some nifty code that removes the file type. Double check to make sure you have one fasta file per patient sample.*
+
+```{bash}
+# for all files with the extendedFrags.fastq suffix, assigned variable FASTQ
+# SAMPLEID is the prefix for each filename
+# convert the fastq to a fasta file using the same filename prefix but a new .fasta suffix
+for FASTQ in *extendedFrags.fastq
+do
+SAMPLEID="${FASTQ%.extendedFrags.fastq}"
+fastq_to_fasta -i $FASTQ -o $SAMPLEID.fasta
+done
+
+# look at the new .fasta files you've generated using the wildcard
+ls *.fasta
+```
+
+***
+
+
+
+
+
+
+
+### *G. Generate list of unique 16S sequences*
+
+***
+
+At this point, we have one long list of 16S gene sequences for each patient sample. Ultimately, we’d like to know what the microbial composition is for each patient. As we discussed in the “Introduction to sequencing microbiota” lecture, the first step is to make a careful accounting of the unique taxons identified across all the patient samples. Then, we can go back and count how many of each taxon are in each sample.
+
+To begin the process of building a taxonomy catalog, we want to pool fasta sequences across all patient samples. First, let’s edit the unique sequence identifier for each 16S sequence to include information about the patient sample, so we don’t lose this information when we pool the sequences all together. 
+
+***
+
+A custom script called **“samples2fasta.sh”** will allow us to run this operation. We can use samples2fasta.sh as follows:
+
+```{bash}
+bash /path/to/samples2fasta.sh [directory with fasta files to be combined] [output file name]
+```
+
+*Run samples2fasta. Note that “.” is a useful character that means your “current working directory.”*
+
+```{bash}
+# run samples2fasta in current directory (.) and with output filename "all_samples.fasta"
+bash ../scripts/samples2fasta.sh . all_samples.fasta
+```
+
+*How many total sequence were pooled? Recall that every fasta file starts with the “>” character.*
+
+```{bash}
+# determine the number of fasta files in the all_samples.fasta document with grep and wc
+grep ">" all_samples.fasta | wc -l
+```
+
+***
+
+We can safely assume that identical 16S sequences come from the same bacterial taxon. Since we are interested in building a catalog of unique bacterial taxons, let’s remove duplicates, generating a list of just unique 16S sequences. We can use the program **“usearch”** to accomplish this goal as it has a built in function, **fastx_uniques**, for performing this exact operation. When used with the -sizeout flag, fastx_uniques will report how many times each unique sequence was found in the dataset.
+
+***
+
+We can run fastx uniques with the following format:
+
+```{bash}
+path/to/usearch -fastx_uniques [input filename] -fastaout [output filename] -sizeout
+```
+
+Find unique 16S sequences in "all_samples.fasta" and output the results to "all_unique_seqs.fasta"
+
+```{bash}
+# Please double check where you installed usearch
+# run the fastx_uniques function in usearch
+/usr/bin/usearch10.0-2.240_i86linux32 -fastx_uniques all_samples.fasta -fastaout all_unique_seqs.fasta -sizeout
+
+```
+
+*Look at the ouput file all_unique_seqs.fasta. See how a new parameter “size=xxx” has been added to the sequence identifier for each sequence in the fasta file according to how many times that unique sequence was found.*
+
+```{bash}
+# use "head" to take a look at the contents of "all_unique_seqs.fasta"
+head all_unique_seqs.fasta
+```
+
+*Also, look at the fastx_unique output. How many singletons were found? Do you think that singleton 16S sequences are likely to represent their own unique bacterial taxons? Are singletons more likely to have arisen due to sequencing errors?*
+
+***
+
+Since bacterial taxons present in the original patient sample at a detectable amount would likely yield multiple 16S sequences in the dataset, it is typical to remove singletons. The usearch function **sortbysize** will sort the unique sequences according to their frequency of occurrence, and **-minsize** will remove sequences that were only found a given number of times. 
+
+***
+
+The format for usearch sortbysize is as follows:
+
+```{bash}
+path/to/usearch -sortbysize [input filename] -fastaout [output filename] -minsize [minimum number of unique sequence occurances]
+
+```
+
+*Run sortbysize for our all_unique_seqs.fasta file, with output filename “all_unique_seqs_sorted.fasta” and  minsize set to 2 to remove singletons.*
+
+```{bash}
+# Please double check where you installed usearch
+# remove singletons and sort our unique 16S sequences
+/usr/bin/usearch10.0-2.240_i86linux32 -sortbysize all_unique_seqs.fasta -fastaout all_unique_seqs_sorted.fasta -minsize 2
+```
+
+*How many non-singleton, unique sequences remain?*
+
+***
+
+
+
+
+
+
+
+
+
+
+### *H.	Cluster unique 16S sequences into operational taxonomic units and determine OTU abundance*
+
+***
+
+As discussed in the “Introduction to sequencing microbiota” lecture, we assume that sequence differences in the variable regions of the 16S gene reflect taxonomic (ideally species-level) difference between different microbes. As we discussed, identifying species is a balance between permitting some strain-level variation, while also maintaining a degree of separation between distinct 16S sequences. 
+
+Recall that when we ask people to draw cars and houses, every “car” drawing slightly varies from other “car” drawings (and likewise for houses), but we can still tell the difference between a car and a house. For 16S sequence, we strike this balance by allowing up to 3% variation in the 16S sequence. Here, we will assume that sequences with <3% sequence variation are of the same bacterial taxon, while sequences with >3% sequence variation are of different bacterial taxons.
+
+Each cluster or grouping of 16S sequences with <3% variation is called an “operation taxonomic unit,” or OTU. Later in the module, we will attempt to make a one to one mapping of OTUs to the names of known bacterial species. 
+
+***
+
+Another tool in **usearch**, the **“-cluster_otus”** option, will allow us to generate OTUs from our non-singleton unique 16S fasta sequences. The operation takes the format:
+
+```{bash}
+path/to/usearch -cluster_otus [input filename] -otus [output filename]
+```
+
+***
+
+Up to this point, we have assumed that the 16S gene sequences assembled by flash are all representative of true 16S gene sequences. However, it is known that PCR amplification of the 16S gene prior to Illumina paired end sequencing can lead to the formation of mixed, or chimeric, 16S gene sequences. OTU clustering algorithms such as usearch are designed to remove these artifactual 16S sequences.
+
+*Run the algorithm for our samples to generate the output file “otus.fasta”. How many OTUs were generated? Were any chimeras detected?*
+
+```{bash}
+# Please double check where you installed usearch
+# cluster otus for "all_unique_seqs_sorted.fasta"" with the output filename "otus.fasta"
+/usr/bin/usearch10.0-2.240_i86linux32 -cluster_otus all_unique_seqs_sorted.fasta -otus otus.fasta
+```
+
+*Look at the file otus.fasta. Are the sequence identifiers particularly useful?*
+
+
+***
+
+Now that the OTU sequences represent bacterial taxa, let’s relabel each OTU with a simple identifier (a single number) for easier reference moving forward. Use the python script “fasta_number.py” in the format:
+
+```{bash}
+python path/to/fasta_number.py [input fasta] OTU_ > [output fasta]
+```
+
+*Now run fasta_number.py for our "otus.fasta" file and name the resulting output file "otus_renamed.fasta"*
+
+```{bash}
+# Please make sure python has been installed and can be called properly
+python ../scripts/fasta_number.py otus.fasta OTU_ > otus_renamed.fasta
+```
+
+*Look again at the file otus_renamed.fasta. Have the representative sequence identifiers changed?*
+
+***
+
+**Creating a table of OTU abundance**
+
+Recall from our introductory lecture that during the process of 16S gene clustering (3% threshold) and OTU generation, a single representative sequence, or “OTU sequence” is chosen for each OTU. A list of these OTU sequences may be found in otus_renamed.fasta.
+
+Now that we’ve identified representative sequences for each distinct bacteria taxa (OUT) in the dataset, we want to know how abundant is each taxon in individual patient samples? Are some OTUs abundant in healthy patients but not in patients with disease? To address these questions, lets revisit the fasta files for each individual basis and count every time a 16S sequence matches one of our defined bacterial taxa (OTU 1, or 2, or 3 …) with 97% or more similarity.
+
+We will again use the usearch algorithm, this time with the “-usearch_global” flag with the all_samples.fasta input and the otus_renamed.fasta database. This command has the format:
+
+```{bash}
+path/to/usearch -usearch_global [sequences to match] -db [representative OTU sequences] -strand plus -id 0.97 -uc out_map.uc
+```
+
+*Now run usearch_global for the OTU sequences listed in "otus_renamed.fasta" and assign matches for all the sequences in "all_samples.fasta" with a stringency of 97% similarity. Output results to out_map.uc*
+
+```{bash}
+# Please double check where you installed usearch
+/usr/bin/usearch10.0-2.240_i86linux32 -usearch_global all_samples.fasta -db otus_renamed.fasta -strand plus -id 0.97 -uc otu_map.uc
+```
+
+The output from -usearch_global produces an otu_map.uc file that shows the best otu match for each sequence in the all_samples.fasta file. However, this format isn’t particularly useful for visualizing the results because we care more about overall taxon abundance than we do about which sequences matched which OTU. 
+
+***
+
+A count table that summarizes the number of times each OTU was found in a given patient sample would be very valuable. We can use the uc2otutab.py python script to produce the otu_matrix.tsv, an “OTU table” file that we will use to derive meaningful experimental insight. We can run uc2otutab.py according to the format:
+
+```{bash}
+python /path/to/uc2otutab.py [input map] > [output table name]
+```
+
+Run this script for our "otu_map.uc" file and call the output table "otu_matrix.tsv"
+
+```{bash}
+# Please make sure python has been installed and can be called properly
+python ../scripts/uc2otutab.py otu_map.uc > otu_matrix.tsv
+```
+
+***
+
+### *I.	Assign taxonomy to OTU sequences*
+
+We now have a table of OTU abundance, and a representative sequence for each OTU, but what genus or species does each representative sequence represent? Fortunately, many others also use 16S gene sequencing to study various microbial communities. At this point, we have excellent databases of 16S gene sequences and a corresponding taxonomic match, ideally down to species level identification. One such reference database can be accessed via the “Ribosomal Database Project” (RDP) classifier tool.
+
+The RDP classifier tool is written in java, so to run it, we will first call java and then specify the path to the program. Our output file will be named "otu_taxonomy_rdp_0.8.tsv" Set a "-c" confidence threshold of 0.8.
+
+*Run the RDP classifer. As this tool is written in java, it's necessary to first run java then pass the location of the installed classifier*
+
+```{bash}
+# Please make sure Java has been installed and can be called properly
+# Pleae also check where the classifier.jar is store on your machine
+java -Xmx1g -jar /usr/local/rdp_classifier_2.12/dist/classifier.jar classify -f filterbyconf -c 0.8 -o otu_taxonomy_rdp_0.8.tsv -h otu_taxonomy.hierachy otus_renamed.fasta
+```
+
+*Take a look at the taxonomy_rdp_0.8.tsv file. Which species does OTU_6 correspond to?*
+
+***
+
+Alternatively, we can always use the NCBI Blast tool to compare each OUT sequence against the NCBI database.
+
+Scroll through your otus_renamed.fasta file (hint: use the Linux command less instead of head to be able to scroll down). Copy and paste the sequence for OTU_6 into BLAST. Does it match the same species determined by the RDP classifier tool?
+
+
+
+
+
+
+
+
+
+
+
+***
+
+## Part 3: Visualizing 16S results
+
+***
+
+
+###*J. Review file import and plotting in R*
+
+In parts 1 and 2 we used the Linux command line to process 16S data and generate OTU tables and associated taxonomy. Now, we transition to using the statistical programming language R to further analyze and plot these data. To begin, we need to tell “R” where to look for our files. Use the “setwd()” command to set your working directory. The command is used as follows: 
+
+```{r}
+setwd("path/to/working/directory")
+```
+
+*Now let's import the results from our microbiome training exercise.*
+
+```{r}
+# Remember in R Console we are at microbiome_module
+# Now let's go to 16S_analysis directory that contains our analysis results
+setwd("./training_exercise/16S_analysis")
+```
+
+***
+
+Once we've told "R" where to look for our files, we can then use the read.table function to import the data we’ve already generated. Read.table can import data from different file types. By specifying a "tab" separator ("\t") as the character that distinguishes values in our table, we can import "tab separated values" (tsv) files. Or, to import "comma separated values“ (csv), specify that the value separator is a comma (","). row.names tells R where to look for the row names, and header = TRUE tells R that there are some cells in our table that do not contain values, but rather are data descriptors.
+
+```{r}
+table_name <- read.table("input_filename",row.names=1,header=TRUE,sep= "\t")
+```
+
+*Now, import the otu count matrix (“otu_matrix.tsv”) and the otu taxonomy table (“otu_taxonomy_rdp_0.8.tvsv”). Don't forget to use the full path to any files not in our current working directory*
+ 
+```{r}
+df_count <- read.table('otu_matrix.tsv', row.names=1, header=TRUE, sep='\t')
+df_tax <- read.table('../taxonomy_files/otu_taxonomy_rdp_0.8.tsv', row.names=1, header=TRUE, sep='\t')
+```
+
+The command “head” works in R just as it did for us on the Linux command line. Use head to take a look at the three imported tables.
+
+```{r}
+head(df_count)
+head(df_tax)
+```
+
+There are handy packages, such as “phyloseq” specifically designed to produce beautiful 16S sequencing plots from our data, but our imported tables are in the wrong format. Now that we have our imported tables, we’ve got to reformat them as data frames. Use the custom script “prepare_data_frames.R” to reformat our data. To run, open the “prepare_data_frames.R” in the training_exercise_output directory, and copy and paste the contents into the R command line.
+
+```{r}
+
+source("../scripts/prepare_data_frames.R")
+```
+
+***
+
+
+
+
+***
+
+##*K.	Plot relative abundance for healthy v disease groups*
+
+Once your data are contained within a “phyloseq” object, it is easy to generate sophisticated plots with relatively little effort.To plot a stacked bar chart of taxon abundance, use the “plot_bar” function in R.
+
+*NOTE: our pipeline yields both normalized and non-normalized data. What do you think the difference is? Is this important?*
+
+```{r}
+library(phyloseq) 
+# It will also load dependent R packages
+plot_bar(physeq, fill="phylum")
+plot_bar(physeq_norm, fill="phylum")
+```
+
+*We can plot heatmaps as well to get a different look at the output.*
+
+```{r}
+plot_heatmap(physeq_norm)
+plot_heatmap(physeq_norm, taxa.label='family')
+```
+
+*What do you think the outcome of the experiment is? Do you see a difference between healthy and disease groups?*
+
+***
+
+
+##*L.	Plot alpha diversity for healthy v disease groups*
+
+While individual taxa are of interest, many biologically relevant changes in the microbiome (for example dysbiosis) are reported at the community level. Statistics that summarize changes in microbiome community composition are therefore of interest.
+
+Alpha diversity metrics represent measurements of microbiome diversity within an individual. For comparative purposes, it is possible to compare the alpha diversity of individual A with that of individual B. There are multiple different statistical methods for measuring alpha diversity.Phyloseq provides convenient access to many of these methods.
+
+*Plot multiple measures of alpha diversity with phyloseq.*
+
+```{r}
+plot_richness(physeq)
+plot_richness(physeq_norm)
+```
+
+Which alpha diversity measures alter between the normalized and un-normalized data sets?
+
+
+
+
+
+
+
+

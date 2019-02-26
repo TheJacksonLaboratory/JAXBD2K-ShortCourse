@@ -31,7 +31,7 @@ In this module, you need to
 
 ### Bonus module material
 
-'miniMouse' module (/Mini_RNAseq_Module) was created by Prof. [Andrea R. Tilden](https://www.colby.edu/directory/profile/artilden/), our BD2K course alumna, from Colby College. We appreciate her generosity to allow us to share her files here. 
+'Mini RNA-Seq Module' (/Mini_RNAseq_Module), also called 'Mini Mouse Module', was created by Prof. [Andrea R. Tilden](https://www.colby.edu/directory/profile/artilden/), our BD2K course alumna, from Colby College. We appreciate her generosity to allow us to share her files here. 
 
 'RNA-seq deom' was created by Prof. [Sheng Li](https://www.jax.org/research-and-faculty/faculty/sheng-li) from JAX-GM. She demonstrated this exercise at JAX BD2K 2017. We are grateful for her support to our course.
 

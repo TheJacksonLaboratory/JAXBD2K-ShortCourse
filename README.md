@@ -10,4 +10,4 @@ In the past three years, our short-course has been proven to be a desirable prog
 **NOTE**: 
 
 - All the ready-to-use sequence datasets can be accessed at **[ftp://ftp.jax.org/encode](ftp://ftp.jax.org/encode)**. 
-- If you have any problem downloading/viewing/using the files from GitHub (https://github.com/TheJacksonLaboratory/JAXBD2K-ShortCourse/) or FTP (ftp://ftp.jax.org/encode), please report issues on our github site. 
+- If you have any problem downloading/viewing/using the files from GitHub (https://github.com/TheJacksonLaboratory/JAXBD2K-ShortCourse/) or FTP (ftp://ftp.jax.org/encode/), please report issues on our github site. 
